@@ -5,6 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Agent Landing Page</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- OneSignal SDK -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(async function(OneSignal) {
+            await OneSignal.init({
+                appId: "4af40f62-4c95-435f-aa3f-57b55de8bc9d", // Your App ID
+                safari_web_id: "web.onesignal.auto.1f868039-39c5-4cdf-b63f-2c8777cb9e04", // Safari Web ID
+                notifyButton: {
+                    enable: true, // Shows the notification bell
+                },
+            });
+
+            // Check if user is subscribed
+            const isSubscribed = await OneSignal.isPushNotificationsEnabled();
+            console.log("Push Notifications Enabled:", isSubscribed);
+
+            // Handle subscription changes
+            OneSignal.on('subscriptionChange', function(isSubscribed) {
+                console.log("Subscription state changed:", isSubscribed);
+            });
+
+            // Handle notification click event
+            OneSignal.on('notificationClick', function(event) {
+                console.log("Notification Clicked:", event);
+                window.location.href = "https://yourwebsite.com"; // Change to your target URL
+            });
+        });
+    </script>
 </head>
 <body class="bg-gray-100 text-gray-900">
     <nav class="bg-white shadow-md py-4">
@@ -22,24 +52,57 @@
         <h2 class="text-4xl font-bold mb-4">Experience the Future with AI</h2>
         <p class="text-lg mb-6">Test our AI-powered agent on this landing page before full launch.</p>
         <a href="#" class="bg-white text-teal-600 px-6 py-3 rounded-lg shadow-lg hover:bg-gray-200">Get Started</a>
+
+        <!-- Subscribe Button -->
+        <button id="subscribeBtn" class="mt-4 bg-gray-200 text-teal-600 px-4 py-2 rounded-md shadow-md hover:bg-gray-300">
+            Subscribe to Notifications
+        </button>
+        
+        <!-- Test Notification Button -->
+        <button id="sendNotification" class="mt-4 bg-gray-200 text-teal-600 px-4 py-2 rounded-md shadow-md hover:bg-gray-300">
+            Send Test Notification
+        </button>
     </header>
+
     <script type="text/javascript">
-  (function(d, t) {
-      var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
-      v.onload = function() {
-        window.voiceflow.chat.load({
-          verify: { projectID: '67acb5e783744497810fa3fa' },
-          url: 'https://general-runtime.voiceflow.com',
-          versionID: 'production'
+        (function(d, t) {
+            var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+            v.onload = function() {
+                window.voiceflow.chat.load({
+                    verify: { projectID: '67acb5e783744497810fa3fa' },
+                    url: 'https://general-runtime.voiceflow.com',
+                    versionID: 'production'
+                });
+            }
+            v.src = "https://cdn.voiceflow.com/widget/bundle.mjs"; 
+            v.type = "text/javascript"; 
+            s.parentNode.insertBefore(v, s);
+        })(document, 'script');
+    </script>
+
+    <script>
+        document.getElementById("subscribeBtn").addEventListener("click", function() {
+            OneSignalDeferred.push(async function(OneSignal) {
+                await OneSignal.registerForPushNotifications();
+                console.log("User Subscribed to Notifications!");
+            });
         });
-      }
-      v.src = "https://cdn.voiceflow.com/widget/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
-  })(document, 'script');
-</script>
-    
+
+        document.getElementById("sendNotification").addEventListener("click", function() {
+            OneSignalDeferred.push(async function(OneSignal) {
+                await OneSignal.sendSelfNotification(
+                    "Hello User!", 
+                    "This is a test notification from our AI Agent.",
+                    "https://yourwebsite.com", 
+                    "https://yourwebsite.com/icon.png",
+                    { action: "open-url", url: "https://yourwebsite.com" }
+                );
+            });
+        });
+    </script>
+
     <footer class="bg-gray-900 text-white text-center py-4">
         <p>&copy; 2025 My AI Agent. All Rights Reserved.</p>
     </footer>
 </body>
 </html>
-
