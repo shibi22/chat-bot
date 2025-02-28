@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact - My AI Agent</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.1.0/introjs.min.css">
 </head>
 <body class="bg-gray-100 text-gray-900">
     <nav class="bg-white shadow-md py-4">
@@ -35,6 +36,30 @@
       v.src = "https://cdn.voiceflow.com/widget/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
   })(document, 'script');
 </script>
+     <div class="container mx-auto py-10 text-center">
+        <!-- Start Tour Button -->
+        <button id="startTourButton" 
+            class="bg-blue-500 text-white px-6 py-2 rounded-lg shadow-lg hover:bg-blue-600 transition">
+            Start Tour 🚀
+        </button>
+
+        <!-- Sections for the Tour -->
+        <div id="step1" class="mt-10 p-6 bg-white shadow-lg rounded-lg">
+            <h2 class="text-xl font-bold">🏠 Home Page</h2>
+            <p>Welcome to our amazing website!</p>
+        </div>
+
+        <div id="step2" class="mt-10 p-6 bg-white shadow-lg rounded-lg">
+            <h2 class="text-xl font-bold">📌 Services</h2>
+            <p>Explore our awesome services here.</p>
+        </div>
+
+        <div id="step3" class="mt-10 p-6 bg-white shadow-lg rounded-lg">
+            <h2 class="text-xl font-bold">📩 Contact Us</h2>
+            <p>Get in touch with us anytime.</p>
+        </div>
+    </div>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.1.0/intro.min.js"></script>
     
     <footer class="bg-gray-900 text-white text-center py-4">
         <p>&copy; 2025 My AI Agent. All Rights Reserved.</p>
