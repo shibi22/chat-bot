@@ -7,20 +7,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- OneSignal SDK -->
- <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
 
     <script>
         window.OneSignalDeferred = window.OneSignalDeferred || [];
         OneSignalDeferred.push(async function(OneSignal) {
             await OneSignal.init({
-                appId: "4af40f62-4c95-435f-aa3f-57b55de8bc9d", // Your App ID
-                safari_web_id: "web.onesignal.auto.1f868039-39c5-4cdf-b63f-2c8777cb9e04", // Safari Web ID
-                notifyButton: {
-                    enable: true, // Shows the notification bell
-                },
+                appId: "4af40f62-4c95-435f-aa3f-57b55de8bc9d",
+                safari_web_id: "web.onesignal.auto.1f868039-39c5-4cdf-b63f-2c8777cb9e04",
+                notifyButton: { enable: true },
             });
 
-            // Check if user is subscribed
+            // Check subscription state
             const isSubscribed = await OneSignal.isPushNotificationsEnabled();
             console.log("Push Notifications Enabled:", isSubscribed);
 
@@ -32,12 +30,13 @@
             // Handle notification click event
             OneSignal.on('notificationClick', function(event) {
                 console.log("Notification Clicked:", event);
-                window.location.href = "https://yourwebsite.com"; // Change to your target URL
+                window.location.href = "https://yourwebsite.com";
             });
         });
     </script>
 </head>
 <body class="bg-gray-100 text-gray-900">
+
     <nav class="bg-white shadow-md py-4">
         <div class="container mx-auto flex justify-between items-center px-6">
             <h1 class="text-2xl font-bold text-teal-600">My AI Agent</h1>
@@ -49,7 +48,14 @@
         </div>
     </nav>
     
-    <header class="h-screen flex flex-col justify-center items-center text-center bg-teal-600 text-white">
+    <header class="h-screen flex flex-col justify-center items-center text-center bg-teal-600 text-white relative">
+        <!-- Background Video -->
+        <video autoplay loop muted class="absolute top-0 left-0 w-full h-full object-cover z-[-1]">
+            <source src="https://videos.pexels.com/video-files/3163534/3163534-uhd_2560_1440_30fps.mp4" type="video/mp4">
+        </video>
+        <!-- Dark Overlay -->
+        <div class="absolute top-0 left-0 w-full h-full bg-black opacity-50 z-[-1]"></div>
+
         <h2 class="text-4xl font-bold mb-4">Experience the Future with AI</h2>
         <p class="text-lg mb-6">Test our AI-powered agent on this landing page before full launch.</p>
         <a href="#" class="bg-white text-teal-600 px-6 py-3 rounded-lg shadow-lg hover:bg-gray-200">Get Started</a>
@@ -58,22 +64,15 @@
         <button id="subscribeBtn" class="mt-4 bg-gray-200 text-teal-600 px-4 py-2 rounded-md shadow-md hover:bg-gray-300">
             Subscribe to Notifications
         </button>
-        
+
         <!-- Test Notification Button -->
         <button id="sendNotification" class="mt-4 bg-gray-200 text-teal-600 px-4 py-2 rounded-md shadow-md hover:bg-gray-300">
             Send Test Notification
         </button>
     </header>
-    <video 
-  autoPlay 
-  loop 
-  muted 
-  className="absolute top-0 left-0 w-full h-full object-cover z-[-1]"
->
-  <source src="https://videos.pexels.com/video-files/3163534/3163534-uhd_2560_1440_30fps.mp4" type="video/mp4" />
-</video>
 
-    <script type="text/javascript">
+    <!-- Voiceflow AI Chatbot -->
+    <script defer type="text/javascript">
         (function(d, t) {
             var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
             v.onload = function() {
@@ -82,9 +81,9 @@
                     url: 'https://general-runtime.voiceflow.com',
                     versionID: 'production'
                 });
-            }
-            v.src = "https://cdn.voiceflow.com/widget/bundle.mjs"; 
-            v.type = "text/javascript"; 
+            };
+            v.src = "https://cdn.voiceflow.com/widget/bundle.mjs";
+            v.type = "text/javascript";
             s.parentNode.insertBefore(v, s);
         })(document, 'script');
     </script>
@@ -99,13 +98,18 @@
 
         document.getElementById("sendNotification").addEventListener("click", function() {
             OneSignalDeferred.push(async function(OneSignal) {
-                await OneSignal.sendSelfNotification(
-                    "Hello User!", 
-                    "This is a test notification from our AI Agent.",
-                    "https://yourwebsite.com", 
-                    "https://yourwebsite.com/icon.png",
-                    { action: "open-url", url: "https://yourwebsite.com" }
-                );
+                const isSubscribed = await OneSignal.isPushNotificationsEnabled();
+                if (isSubscribed) {
+                    await OneSignal.sendSelfNotification(
+                        "Hello User!", 
+                        "This is a test notification from our AI Agent.",
+                        "https://yourwebsite.com", 
+                        "https://yourwebsite.com/icon.png",
+                        { action: "open-url", url: "https://yourwebsite.com" }
+                    );
+                } else {
+                    alert("Please subscribe to notifications first!");
+                }
             });
         });
     </script>
@@ -113,5 +117,6 @@
     <footer class="bg-gray-900 text-white text-center py-4">
         <p>&copy; 2025 My AI Agent. All Rights Reserved.</p>
     </footer>
+
 </body>
 </html>
